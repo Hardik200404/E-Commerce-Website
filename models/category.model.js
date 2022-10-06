@@ -1,4 +1,5 @@
 const {seq}=require('../connections/sequelize.connection');
+const {product_model}=require('./products.model');
 const {DataTypes}=require('sequelize');
 
 function defineCategoryModel(){
@@ -18,6 +19,15 @@ function defineCategoryModel(){
             defaultValue:seq.fn('NOW')
         }
     })
+
+    //defining relation with products table, as products have category id as FK
+    category_model.hasMany(product_model,{
+        foreignKey:'category_id'
+    });
+
+    product_model.belongsTo(category_model,{
+        foreignKey:'category_id'
+    });
 
     return category_model
 }

@@ -1,37 +1,37 @@
-let {category_service_obj}=require('../services/category.service');
+let {product_service_obj}=require('../services/products.service');
 let {execute_with_sync}=require('../connections/sequelize.connection');
 let express=require('express');
-let category_router=express.Router();
+let products_router=express.Router();
 
-//default category endpoint page
-category_router.get('/',function(req,res){
+//all prodcuts endpoint
+products_router.get('/',function(req,res){
     //wrapping our fetch inside execute with sync will create the schema
     //even if it doesn't exist
     execute_with_sync(
-    category_service_obj.get_categories_all()
-    .then((results)=>(results.map((data)=>data.dataValues)))
-    .then((data)=>{
-        res.setHeader('content-type','application/json');
-        res.writeHead(200);
-        res.end(JSON.stringify(data));
-    })
-    .catch((err)=>{
-        res.setHeader('content-type','application/json');
-        res.writeHead(500);
-        console.log("Error ",err);
-        res.end(JSON.stringify({
-            "message":"Error Fetching Categories"
-        }))
-    })
+        product_service_obj.get_products_all()
+        .then((results)=>(results.map((data)=>data.dataValues)))
+        .then((data)=>{
+            res.setHeader('content-type','application/json');
+            res.writeHead(200);
+            res.end(JSON.stringify(data));
+        })
+        .catch((err)=>{
+            res.setHeader('content-type','application/json');
+            res.writeHead(500);
+            console.log("Error ",err);
+            res.end(JSON.stringify({
+                "message":"Error fetching Products"
+            }))
+        })
     )
 })
 
-//getting category by id endpoint
-category_router.get('/:id',function(req,res){
+//getting product by id endpoint
+products_router.get('/:id',function(req,res){
     //wrapping our fetch inside execute with sync will create the schema
     //even if it doesn't exist
     execute_with_sync(
-        category_service_obj.get_categories_byId(req.params.id)
+        product_service_obj.get_product_byId(req.params.id)
         .then((data)=>{
             res.setHeader('content-type','application/json');
             res.writeHead(200);
@@ -39,7 +39,7 @@ category_router.get('/:id',function(req,res){
                 res.end(JSON.stringify(data));
             }else{
                 res.end(JSON.stringify({
-                    "message":"Category not Found"
+                    "message":"Product not Found"
                 }));
             }
         })
@@ -48,23 +48,23 @@ category_router.get('/:id',function(req,res){
             res.writeHead(500);
             console.log("Error ",err);
             res.end(JSON.stringify({
-                "message":"Error Fetching Category"
+                "message":"Error fetching Product"
             }))
         })
     )
 })
-
-//adding category
-category_router.post('/',function(req,res){
+    
+//adding Product
+products_router.post('/',function(req,res){
     //wrapping our fetch inside execute with sync will create the schema
     //even if it doesn't exist
     execute_with_sync(
-        category_service_obj.create_category(req.body)
+        product_service_obj.create_product(req.body)
         .then((data)=>{
             res.setHeader('content-type','application/json');
             res.writeHead(200);
             res.end(JSON.stringify({
-                "message":"Category Created Successfully"
+                "message":"Product Created Successfully"
             }))
         })
         .catch((err)=>{
@@ -72,9 +72,10 @@ category_router.post('/',function(req,res){
             res.writeHead(500);
             console.log("Error ",err);
             res.end(JSON.stringify({
-                "message":"Error Creating Category"
+                "message":"Error Creating Product"
             }))
         })
     )
 })
-module.exports={category_router};
+
+module.exports={products_router};
