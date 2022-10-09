@@ -1,65 +1,14 @@
 let {product_service_obj}=require('../services/products.service');
-let {execute_with_sync}=require('../connections/sequelize.connection');
-let express=require('express');
-let products_router=express.Router();
 
-//all prodcuts endpoint
-products_router.get('/',function(req,res){
-    //wrapping our fetch inside execute with sync will create the schema
-    //even if it doesn't exist
-    execute_with_sync(
-        product_service_obj.get_products_all()
-        .then((results)=>(results.map((data)=>data.dataValues)))
-        .then((data)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(200);
-            res.end(JSON.stringify(data));
-        })
-        .catch((err)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(500);
-            console.log("Error ",err);
-            res.end(JSON.stringify({
-                "message":"Error fetching Products"
-            }))
-        })
-    )
-})
-
-//getting product by id endpoint
-products_router.get('/:id',function(req,res){
-    //wrapping our fetch inside execute with sync will create the schema
-    //even if it doesn't exist
-    execute_with_sync(
-        product_service_obj.get_product_byId(req.params.id)
-        .then((data)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(200);
-            if(data!==null){
-                res.end(JSON.stringify(data));
-            }else{
-                res.end(JSON.stringify({
-                    "message":"Product not Found"
-                }));
-            }
-        })
-        .catch((err)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(500);
-            console.log("Error ",err);
-            res.end(JSON.stringify({
-                "message":"Error fetching Product"
-            }))
-        })
-    )
-})
-    
-//adding Product
-products_router.post('/',function(req,res){
-    //wrapping our fetch inside execute with sync will create the schema
-    //even if it doesn't exist
-    execute_with_sync(
-        product_service_obj.create_product(req.body)
+function create(req,res){
+    let product={
+        category_id:req.body.category_id,
+        product_name:req.body.product_name,
+        description:req.body.description,
+        price:req.body.price
+    }
+    if(product.category_id && product.product_name && product.description){
+        product_service_obj.create_product(product)
         .then((data)=>{
             res.setHeader('content-type','application/json');
             res.writeHead(200);
@@ -75,7 +24,108 @@ products_router.post('/',function(req,res){
                 "message":"Error Creating Product"
             }))
         })
-    )
-})
+    }
+    else{
+        res.setHeader('content-type','application/json');
+        res.writeHead(400);
+        res.end(JSON.stringify({
+            "message":"Bad Content"
+        }))
+    }
+}
 
-module.exports={products_router};
+function fetchAll(req,res){
+    product_service_obj.get_products_all()
+    .then((results)=>(results.map((data)=>data.dataValues)))
+    .then((data)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(200);
+        res.end(JSON.stringify(data));
+    })
+    .catch((err)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(500);
+        console.log("Error ",err);
+        res.end(JSON.stringify({
+            "message":"Error fetching Products"
+        }))
+    })
+}
+
+function fetchOne(req,res){
+    product_service_obj.get_product_byId(req.params.id)
+    .then((data)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(200);
+        if(data!==null){
+            res.end(JSON.stringify(data));
+        }else{
+            res.end(JSON.stringify({
+                "message":"Product not Found"
+            }));
+        }
+        })
+        .catch((err)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(500);
+        console.log("Error ",err);
+        res.end(JSON.stringify({
+            "message":"Error fetching Product"
+        }))
+    })
+}
+
+function update(req,res){
+    let updated_product={
+        category_id:req.body.category_id,
+        product_name:req.body.product_name,
+        description:req.body.description,
+        price:req.body.price
+    }
+    if(updated_product.category_id && updated_product.product_name && updated_product.description){
+        product_service_obj.update_product_byId(updated_product,req.params.id)
+        .then((data)=>{
+            res.setHeader('content-type','application/json');
+            res.writeHead(200);
+            res.end(JSON.stringify({
+                "message":"Product Updated Successfully"
+            }))
+        })
+        .catch((err)=>{
+            res.setHeader('content-type','application/json');
+            res.writeHead(500);
+            console.log("Error ",err);
+            res.end(JSON.stringify({
+                "message":"Error Updating Product"
+            }))
+        })
+    }
+    else{
+        res.setHeader('content-type','application/json');
+        res.writeHead(400);
+        res.end(JSON.stringify({
+            "message":"Bad Content"
+        }))
+    }
+}
+
+function delete_product(req,res){
+    product_service_obj.delete_product_byId(req.params.id)
+    .then(()=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(200);
+        res.end(JSON.stringify({
+            "message":"Product Deleted Successfully"
+        }))
+    })
+    .catch((err)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(500);
+        console.log("Error ",err);
+        res.end(JSON.stringify({
+            "message":"Error Deleting Product"
+        }))
+    })
+}
+
+module.exports={create,fetchAll,fetchOne,update,delete_product};

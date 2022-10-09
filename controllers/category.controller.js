@@ -1,13 +1,37 @@
 let {category_service_obj}=require('../services/category.service');
-let {execute_with_sync}=require('../connections/sequelize.connection');
-let express=require('express');
-let category_router=express.Router();
 
-//default category endpoint page
-category_router.get('/',function(req,res){
-    //wrapping our fetch inside execute with sync will create the schema
-    //even if it doesn't exist
-    execute_with_sync(
+function create(req,res){
+    let category={
+        category_name:req.body.category_name
+    }
+    if(category.category_name){
+        category_service_obj.create_category(category)
+        .then((data)=>{
+            res.setHeader('content-type','application/json');
+            res.writeHead(200);
+            res.end(JSON.stringify({
+                "message":"Category Created Successfully"
+            }))
+        })
+        .catch((err)=>{
+            res.setHeader('content-type','application/json');
+            res.writeHead(500);
+            console.log("Error ",err);
+            res.end(JSON.stringify({
+                "message":"Error Creating Product"
+            }))
+        })
+    }
+    else{
+        res.setHeader('content-type','application/json');
+        res.writeHead(400);
+        res.end(JSON.stringify({
+            "message":"Bad Content"
+        }))
+    }
+}
+
+function fetchAll(req,res){
     category_service_obj.get_categories_all()
     .then((results)=>(results.map((data)=>data.dataValues)))
     .then((data)=>{
@@ -23,48 +47,42 @@ category_router.get('/',function(req,res){
             "message":"Error Fetching Categories"
         }))
     })
-    )
-})
+}
 
-//getting category by id endpoint
-category_router.get('/:id',function(req,res){
-    //wrapping our fetch inside execute with sync will create the schema
-    //even if it doesn't exist
-    execute_with_sync(
-        category_service_obj.get_categories_byId(req.params.id)
-        .then((data)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(200);
-            if(data!==null){
-                res.end(JSON.stringify(data));
-            }else{
-                res.end(JSON.stringify({
-                    "message":"Category not Found"
-                }));
-            }
+function fetchOne(req,res){
+    category_service_obj.get_categories_byId(req.params.id)
+    .then((data)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(200);
+        if(data!==null){
+            res.end(JSON.stringify(data));
+        }else{
+            res.end(JSON.stringify({
+                "message":"Category not Found"
+            }));
+        }
         })
         .catch((err)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(500);
-            console.log("Error ",err);
-            res.end(JSON.stringify({
-                "message":"Error Fetching Category"
-            }))
-        })
-    )
-})
+        res.setHeader('content-type','application/json');
+        res.writeHead(500);
+        console.log("Error ",err);
+        res.end(JSON.stringify({
+            "message":"Error Fetching Category"
+        }))
+    })
+}
 
-//adding category
-category_router.post('/',function(req,res){
-    //wrapping our fetch inside execute with sync will create the schema
-    //even if it doesn't exist
-    execute_with_sync(
-        category_service_obj.create_category(req.body)
+function update(req,res){
+    let updated_category={
+        category_name:category_name
+    }
+    if(updated_category.category_name){
+        category_service_obj.update_category_byId(updated_category,req.params.id)
         .then((data)=>{
             res.setHeader('content-type','application/json');
             res.writeHead(200);
             res.end(JSON.stringify({
-                "message":"Category Created Successfully"
+                "message":"Category Updated Successfully"
             }))
         })
         .catch((err)=>{
@@ -72,9 +90,39 @@ category_router.post('/',function(req,res){
             res.writeHead(500);
             console.log("Error ",err);
             res.end(JSON.stringify({
-                "message":"Error Creating Category"
+                "message":"Error Updating Category"
             }))
         })
-    )
-})
-module.exports={category_router};
+    }
+    else{
+        res.setHeader('content-type','application/json');
+        res.writeHead(400);
+        res.end(JSON.stringify({
+            "message":"Bad Content"
+        }))
+    }
+}
+
+function delete_category(req,res){
+    category_service_obj.delete_category_byId(req.params.id)
+    .then(()=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(200);
+        res.end(JSON.stringify({
+            "message":"Category Deleted Successfully"
+        }))
+    })
+    .catch((err)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(500);
+        console.log("Error ",err);
+        res.end(JSON.stringify({
+            "message":"Error Deleting Category"
+        }))
+    })
+}
+
+function update(){
+    return
+}
+module.exports={create,fetchAll,fetchOne,update,delete_category}

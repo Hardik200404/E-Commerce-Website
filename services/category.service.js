@@ -1,9 +1,8 @@
-let {category_model}=require('../models/category.model.js');
-
+let db=require('../models/index');
 class category_service{
     schema;
     constructor(){
-        this.schema=category_model
+        this.schema=db.category
     }
     get_categories_all(){
         return this.schema.findAll();
@@ -17,6 +16,22 @@ class category_service{
     }
     create_category(category){
         return this.schema.create(category);
+    }
+    update_category_byId(updated_category,id){
+        //return true will give back the updated
+        return this.schema.update(updated_category,{
+            returning:true,
+            where:{
+                id:id
+            }
+        })
+    }
+    delete_category_byId(id){
+        return this.schema.destroy({
+            where:{
+                id:id
+            }
+        })
     }
 }
 
