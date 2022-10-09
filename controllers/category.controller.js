@@ -121,8 +121,4 @@ function delete_category(req,res){
         }))
     })
 }
-
-function update(){
-    return
-}
 module.exports={create,fetchAll,fetchOne,update,delete_category}
