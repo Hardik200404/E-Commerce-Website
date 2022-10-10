@@ -20,7 +20,7 @@ function create(req,res){
 }
 
 function fetchAll(req,res){
-    product_service_obj.get_products_all()
+    product_service_obj.get_products_all(req.query)
     .then((results)=>(results.map((data)=>data.dataValues)))
     .then((data)=>{
         res.setHeader('content-type','application/json');

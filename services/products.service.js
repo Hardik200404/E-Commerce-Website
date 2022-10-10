@@ -4,11 +4,14 @@ class product_service{
     constructor(){
         this.schema=db.product
     }
-    get_products_all(){
+    get_products_all(query){
+        query=this.#define_filters(query)
         return this.schema.findAll({
+            where:query.product,
             include:[{
                 required:true,
-                model:db.category
+                model:db.category,
+                where:query.category
             }]
             //include will include the respective record of category, while fetching products
         });
@@ -42,6 +45,38 @@ class product_service{
                 id:id
             }
         })
+    }
+
+    #define_filters(query){
+        let obj={};
+        if(query.categoryName){
+            obj['category']={
+                'category_name':query.categoryName
+            };
+        }
+        if(query.maxPrice && query.minPrice){
+            obj['product']={
+                'price':{
+                    [db.Sequelize.Op.lte]:Number(query.maxPrice),
+                    [db.Sequelize.Op.gte]:Number(query.minPrice)
+                }
+            }
+        }
+        else if(query.maxPrice){
+            obj['product']={
+                'price':{
+                    [db.Sequelize.Op.lte]:Number(query.maxPrice)
+                }
+            }
+        }
+        else if(query.minPrice){
+            obj['product']={
+                'price':{
+                    [db.Sequelize.Op.gte]:Number(query.minPrice)
+                }
+            }
+        }
+        return obj
     }
 }
 
