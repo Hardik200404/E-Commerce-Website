@@ -1,34 +1,22 @@
 let {category_service_obj}=require('../services/category.service');
 
 function create(req,res){
-    let category={
-        category_name:req.body.category_name
-    }
-    if(category.category_name){
-        category_service_obj.create_category(category)
-        .then((data)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(200);
-            res.end(JSON.stringify({
-                "message":"Category Created Successfully"
-            }))
-        })
-        .catch((err)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(500);
-            console.log("Error ",err);
-            res.end(JSON.stringify({
-                "message":"Error Creating Product"
-            }))
-        })
-    }
-    else{
+    category_service_obj.create_category(req.body.category_name)
+    .then((data)=>{
         res.setHeader('content-type','application/json');
-        res.writeHead(400);
+        res.writeHead(201);
         res.end(JSON.stringify({
-            "message":"Bad Content"
+            "message":"Category Created Successfully"
         }))
-    }
+    })
+    .catch((err)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(500);
+        console.log("Error ",err);
+        res.end(JSON.stringify({
+            "message":"Error Creating Product"
+        }))
+    })
 }
 
 function fetchAll(req,res){
@@ -73,34 +61,23 @@ function fetchOne(req,res){
 }
 
 function update(req,res){
-    let updated_category={
-        category_name:category_name
-    }
-    if(updated_category.category_name){
-        category_service_obj.update_category_byId(updated_category,req.params.id)
-        .then((data)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(200);
-            res.end(JSON.stringify({
-                "message":"Category Updated Successfully"
-            }))
-        })
-        .catch((err)=>{
-            res.setHeader('content-type','application/json');
-            res.writeHead(500);
-            console.log("Error ",err);
-            res.end(JSON.stringify({
-                "message":"Error Updating Category"
-            }))
-        })
-    }
-    else{
+    category_service_obj.update_category_byId(req.body.category_name,req.params.id)
+    .then((data)=>{
         res.setHeader('content-type','application/json');
-        res.writeHead(400);
+        res.writeHead(200);
         res.end(JSON.stringify({
-            "message":"Bad Content"
+            "message":"Category Updated Successfully"
         }))
-    }
+    })
+    .catch((err)=>{
+        res.setHeader('content-type','application/json');
+        res.writeHead(500);
+        console.log("Error ",err);
+        res.end(JSON.stringify({
+            "message":"Error Updating Category"
+        }))
+    })
+    
 }
 
 function delete_category(req,res){
