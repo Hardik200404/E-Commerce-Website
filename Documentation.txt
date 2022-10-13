@@ -7,18 +7,18 @@ when typed 'npm start' in terminal the server starts.
 so the flow begins with server.js
 
 > server.js --> configs (server.config.js)
-it gets the port from server.config which got if from '.env' file
+it gets the port from server.config which got it from '.env' file
 
 > server.js --> models (index.js)
 it gets the db object which it uses to be in sync with MySql
 
-> different Application's .route files are registered along with the express 'app'
-those .route files contain the endpoints
+Different Application's '.route' files are registered along with the express 'app'
+those '.route' files contain the endpoints
 
-> depending upon the url ,corresponding endpoint is hit
+Depending upon the url ,corresponding endpoint is hit
 lets say 'localhost:8080/categories'
 
-> In .route file of categories 
+In '.route file' of categories 
 > category.route.js --> validators(category_name_validator)
 
 Depending upon the url and the method the corresponding controller function is called
