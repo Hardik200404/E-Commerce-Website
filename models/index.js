@@ -8,9 +8,6 @@ let seq=new Sequelize(db_config.NAME,db_config.USER,db_config.PASSWORD,{
     pool:db_config.pool
 })
 
-const db = {};
-db.Sequelize = Sequelize;
-db.seq = seq;
 let category = require('./category.model')(seq,Sequelize);
 let product = require('./products.model')(seq,Sequelize);
 let user = require('./users.model')(seq,Sequelize);
@@ -37,8 +34,13 @@ user.belongsToMany(role,{
     otherKey:'role_id'
 })
 
+const db = {};
+db.Sequelize = Sequelize;
+db.seq = seq;
 db.category = category;
 db.product = product;
 db.user=user;
 db.role=role;
+//now db object has all the models and sequelize function
+
 module.exports = db;

@@ -14,7 +14,7 @@ function create(req,res){
         res.writeHead(500);
         console.log("Error ",err);
         res.end(JSON.stringify({
-            "message":"Error Creating Product"
+            "message":"Error Creating Category"
         }))
     })
 }
@@ -41,22 +41,15 @@ function fetchOne(req,res){
     category_service_obj.get_categories_byId(req.params.id)
     .then((data)=>{
         res.setHeader('content-type','application/json');
-        res.writeHead(200);
         if(data!==null){
+            res.writeHead(200);
             res.end(JSON.stringify(data));
         }else{
+            res.writeHead(500);
             res.end(JSON.stringify({
-                "message":"Category not Found"
-            }));
+                "message":"Error Fetching Category"
+            }))
         }
-        })
-        .catch((err)=>{
-        res.setHeader('content-type','application/json');
-        res.writeHead(500);
-        console.log("Error ",err);
-        res.end(JSON.stringify({
-            "message":"Error Fetching Category"
-        }))
     })
 }
 
