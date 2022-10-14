@@ -53,16 +53,21 @@ function check_roles_withDB(req,res,next){
             }
 
             let requestedRoles = req.body.roles;
-            requestedRoles.forEach((requestedRole) => {
-                if(!presentRoleObj[requestedRole]) {
+            let flag=true
+            for(i of requestedRoles){
+                if(!presentRoleObj[i]) {
+                    flag=false;
                     res.setHeader('content-type', 'application/json');
                     res.writeHead(400);
                     res.end(JSON.stringify({
-                        message: `role with name ${requestedRole} is not present`
+                        message: `role with name ${i} is not present`
                     }));
+                    break;
                 }
-            });
-            next();
+            }
+            if(flag){
+                next();
+            }
         });
     }else{
         next();
