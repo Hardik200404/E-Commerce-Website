@@ -1,4 +1,4 @@
-let {auth_service_obj}=require('../services/auth.service');
+const {auth_service_obj}=require('../services/auth.service');
 
 function sign_up(req,res){
     let user={
@@ -25,4 +25,24 @@ function sign_up(req,res){
     })
 }
 
-module.exports={sign_up};
+function sign_in(req,res) {
+    auth_service_obj.sign_in(req.body.user_name,req.body.password)
+    .then((authResponse) => {
+        res.setHeader('content-type', 'application/json');
+        res.writeHead(200);
+        res.end(JSON.stringify(authResponse));
+    }).catch(error => {
+        if(!error.errorCode) {
+            error.errorCode = 500
+        }
+        console.log('Error Occurred while signing in', error);
+        res.setHeader('content-type', 'application/json');
+        res.writeHead(error.errorCode);
+        res.end(JSON.stringify({
+            message: error.message
+        }));
+    });
+}
+
+
+module.exports={sign_up,sign_in};

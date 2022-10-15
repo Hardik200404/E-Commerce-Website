@@ -17,6 +17,13 @@ class user_servie{
             }
         })
     }
+    get_user_byName(user_name){
+        return this.schema.findOne({
+            where:{
+                user_name:user_name
+            }
+        })
+    }
 }
 
 let user_servie_obj=new user_servie();
