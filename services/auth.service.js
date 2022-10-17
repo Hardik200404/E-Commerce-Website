@@ -3,6 +3,7 @@ let {role_serive_obj}=require('./role.serive');
 let bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
 const authConfig = require('../configs/auth.config');
+
 class auth_service{
     sign_up(user,roles){
         //before creating user, hash the password
@@ -32,7 +33,7 @@ class auth_service{
             if(user) {
                 let isPasswordValid = bcrypt.compareSync(password, user.password);
                 if(!isPasswordValid) {
-                    Promise.reject({
+                    return Promise.reject({
                         errorCode: 401,
                         message: 'Wrong Password'
                     });
@@ -40,6 +41,8 @@ class auth_service{
 
                 return user.getRoles()
                 .then((roles) => {
+                    //getting roles of that user,and adding this information to 
+                    //jwt token
                     let roleNames = roles.map((role) => {
                         return role.role_name;
                     });
@@ -50,17 +53,15 @@ class auth_service{
                         });
                     
                     return {
-                        id: user.id,
-                        name:user.user_name,
-                        email: user.email,
+                        message:'Logged In Successfully',
                         accessToken: token
                     }
                 });
 
             } else {
-                Promise.reject(
+                return Promise.reject(
                     {
-                        errorCode: 401, 
+                        errorCode: 404, 
                         message: 'User Not Found'
                     });
             }

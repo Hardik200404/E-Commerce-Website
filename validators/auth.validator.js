@@ -1,13 +1,31 @@
 const {user_servie_obj} = require("../services/user.service");
 const {role_serive_obj}=require('../services/role.serive');
-//check request user body 
-function user_validator(req,res,next){
+
+//check request user body in signUp
+function singUp_validator(req,res,next){
     let user={
         user_name:req.body.user_name,
         email:req.body.email,
         password:req.body.password,
     }
     if(user.user_name && user.email && user.password){
+        next();
+    }else{
+        res.setHeader('content-type','application/json');
+        res.writeHead(400);
+        res.end(JSON.stringify({
+            "message":"Bad Content"
+        }))
+    }
+}
+
+//check request user body in signIn
+function signIn_validator(req,res,next){
+    let user={
+        user_name:req.body.user_name,
+        password:req.body.password
+    }
+    if(user.user_name && user.password){
         next();
     }else{
         res.setHeader('content-type','application/json');
@@ -73,4 +91,5 @@ function check_roles_withDB(req,res,next){
         next();
     }
 }
-module.exports={user_validator,check_email_withDB,check_roles_withDB}
+
+module.exports={singUp_validator,check_email_withDB,check_roles_withDB,signIn_validator}

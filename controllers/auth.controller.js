@@ -31,10 +31,7 @@ function sign_in(req,res) {
         res.setHeader('content-type', 'application/json');
         res.writeHead(200);
         res.end(JSON.stringify(authResponse));
-    }).catch(error => {
-        if(!error.errorCode) {
-            error.errorCode = 500
-        }
+    }).catch((error) => {
         console.log('Error Occurred while signing in', error);
         res.setHeader('content-type', 'application/json');
         res.writeHead(error.errorCode);
