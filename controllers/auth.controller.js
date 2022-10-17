@@ -41,5 +41,4 @@ function sign_in(req,res) {
     });
 }
 
-
 module.exports={sign_up,sign_in};

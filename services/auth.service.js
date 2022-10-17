@@ -1,8 +1,7 @@
 let {user_servie_obj}=require('./user.service');
 let {role_serive_obj}=require('./role.serive');
+let {jwt_service_obj}=require('./jwt.service');
 let bcrypt=require('bcrypt');
-const jwt=require('jsonwebtoken');
-const authConfig = require('../configs/auth.config');
 
 class auth_service{
     sign_up(user,roles){
@@ -47,10 +46,8 @@ class auth_service{
                         return role.role_name;
                     });
 
-                    let token = jwt.sign({ id: user.id, roles: roleNames },
-                        authConfig.SECRET, {
-                            expiresIn: authConfig.EXPIRY_TIME
-                        });
+                    let payload={id:user.id, roles:roleNames};
+                    let token = jwt_service_obj.create_jwt_token(payload);
                     
                     return {
                         message:'Logged In Successfully',

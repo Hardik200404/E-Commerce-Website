@@ -1,5 +1,6 @@
 const {user_servie_obj} = require("../services/user.service");
 const {role_serive_obj}=require('../services/role.serive');
+let {jwt_service_obj}=require('../services/jwt.service')
 
 //check request user body in signUp
 function singUp_validator(req,res,next){
@@ -76,7 +77,7 @@ function check_roles_withDB(req,res,next){
                 if(!presentRoleObj[i]) {
                     flag=false;
                     res.setHeader('content-type', 'application/json');
-                    res.writeHead(400);
+                    res.writeHead(404);
                     res.end(JSON.stringify({
                         message: `role with name ${i} is not present`
                     }));
@@ -92,4 +93,39 @@ function check_roles_withDB(req,res,next){
     }
 }
 
-module.exports={singUp_validator,check_email_withDB,check_roles_withDB,signIn_validator}
+function verify_jwt(req,res,next){
+    try{
+        let decoded=jwt_service_obj.verify_jwt_token(req.rawHeaders[1])
+        if(decoded.validated){
+            req.decoded_jwt = decoded.decoded_jwt;
+            next();
+        }
+    }catch(err){
+        res.setHeader('content-type', 'application/json');
+        res.writeHead(401);
+        res.end(JSON.stringify({
+            message: err.message
+        }));
+    }
+}
+
+function is_admin(req,res,next){
+    if(req.decoded_jwt.roles.indexOf('admin')!=-1){
+        next();
+    }else{
+        res.setHeader('content-type', 'application/json');
+        res.writeHead(403);
+        res.end(JSON.stringify({
+            message: 'Not Authorised'
+        }));
+    }
+    
+}
+
+module.exports={singUp_validator,
+    check_email_withDB,
+    check_roles_withDB,
+    signIn_validator,
+    verify_jwt,
+    is_admin
+}
