@@ -10,11 +10,7 @@ class cart_service{
     }
 
     get_cart_byId(id){
-        return this.schema.findOne({
-            where:{
-                id:id
-            }
-        })
+        return this.schema.findByPk(id)
     }
 }
 
