@@ -5,7 +5,7 @@ function create_role(req,res){
         res.setHeader('content-type','application/json');
         res.writeHead(201);
         res.end(JSON.stringify({
-            "message":"Role created Successfully"
+            "message":"Role Created Successfully"
         }))
     })
     .catch((err)=>{

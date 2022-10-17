@@ -12,6 +12,7 @@ require('./routes/products.route')(app);
 require('./routes/category.route')(app);
 require('./routes/auth.route')(app);
 require('./routes/roles.route')(app);
+require('./routes/cart.route')(app);
 
 //.sync is helps to be in sync with the MySql while performing any ops
 //if there no such table/db, this will create whatever is needed 

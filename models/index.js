@@ -12,6 +12,7 @@ let category = require('./category.model')(seq,Sequelize);
 let product = require('./products.model')(seq,Sequelize);
 let user = require('./users.model')(seq,Sequelize);
 let role = require('./roles.model')(seq,Sequelize);
+let cart = require('./cart.model')(seq,Sequelize);
 
 //defining One to Many mapping for category and products
 category.hasMany(product,{
@@ -22,7 +23,7 @@ product.belongsTo(category,{
 });
 
 //defining Many to Many mapping for user and role 
-//user_roles will be a diff table to hold the mapping
+//user_roles will be a diff table to hold the mapping with given two keys
 role.belongsToMany(user,{
     through:'user_roles',
     foreignKey:'role_id',
@@ -34,6 +35,23 @@ user.belongsToMany(role,{
     otherKey:'role_id'
 })
 
+//defining Many to Many mapping for product and cart
+//product_cart will be a diff table to hold the mapping with given two keys
+cart.belongsToMany(product,{
+    through:'product_cart',
+    foreignKey:'cart_id',
+    otherKey:'product_id'
+})
+product.belongsToMany(cart,{
+    through:'product_cart',
+    foreignKey:'product_id',
+    otherKey:'cart_id'
+})
+
+//defining relation of user and cart, as user can have different carts through time
+user.hasMany(cart);
+cart.belongsTo(user);
+
 const db = {};
 db.Sequelize = Sequelize;
 db.seq = seq;
@@ -41,6 +59,7 @@ db.category = category;
 db.product = product;
 db.user=user;
 db.role=role;
+db.cart=cart;
 //now db object has all the models and sequelize function
 
 module.exports = db;

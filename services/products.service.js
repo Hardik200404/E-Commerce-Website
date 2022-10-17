@@ -27,6 +27,18 @@ class product_service{
             }]
         });
     }
+
+    //for getting multiple different products for cart
+    get_products_byIds(ids){
+        return this.schema.findAll({
+            where:{
+                id:{
+                    [db.Sequelize.Op.or]:ids
+                }
+            }
+        })
+    }
+    
     create_product(product){
         return this.schema.create(product);
     }
