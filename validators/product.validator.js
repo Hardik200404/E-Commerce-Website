@@ -19,25 +19,41 @@ function product_validator(req,res,next){
 let {product_service_obj}=require('../services/products.service');
 let {update}=require('../controllers/cart.controller');
 function products_ids_validator(req,res,next){
-    product_service_obj.get_products_byIds(req.body.items)
-    .then((products)=>{
-        if(products){
-            return update(req,res,products);
-        }else{
-            res.setHeader('content-type','application/json');
-            res.writeHead(404);
-            res.end(JSON.stringify({
-                "message":"Product Not Found"
-            }))
-        }
-    }).catch((err)=>{
-        console.log('error while fetching products by ids ',err);
+    if(req.body.items){
+        product_service_obj.get_products_byIds(req.body.items)
+        .then((products)=>{
+            let presentProducts = products.map((role) => {
+                return role.dataValues
+            });
+
+            let presentProductObj = {};
+            for(let product of presentProducts) {
+                let id = product.id;
+                presentProductObj[id] = 1;
+            }
+
+            let requestedProducts = req.body.items;
+            let flag=true;
+            for(i of requestedProducts){
+                if(!presentProductObj[i]) {
+                    flag=false;
+                    res.setHeader('content-type', 'application/json');
+                    res.writeHead(404);
+                    res.end(JSON.stringify({
+                        message: `Product with id ${i} is not present`
+                    }));
+                    break;
+                }
+            }
+            if(flag) return update(req,res,requestedProducts);
+        })
+    }else{
         res.setHeader('content-type','application/json');
         res.writeHead(400);
         res.end(JSON.stringify({
             "message":"Bad Content"
         }))
-    })
+    }
 }
 
 module.exports={product_validator,products_ids_validator}
