@@ -12,6 +12,15 @@ class cart_service{
     get_cart_byId(id){
         return this.schema.findByPk(id)
     }
+
+    update_cart(cart,id){
+        return this.schema.update(cart,{
+            returning:true,
+            where:{
+                id:id
+            }
+        })
+    }
 }
 
 let cart_service_obj=new cart_service();

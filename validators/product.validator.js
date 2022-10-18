@@ -27,8 +27,10 @@ function products_ids_validator(req,res,next){
             });
 
             let presentProductObj = {};
+            let cost=0;
             for(let product of presentProducts) {
                 let id = product.id;
+                cost+=product.price
                 presentProductObj[id] = 1;
             }
 
@@ -45,7 +47,7 @@ function products_ids_validator(req,res,next){
                     break;
                 }
             }
-            if(flag) return update(req,res,requestedProducts);
+            if(flag) return update(req,res,requestedProducts,cost);
         })
     }else{
         res.setHeader('content-type','application/json');
