@@ -3,11 +3,11 @@ let {product_service_obj}=require('../services/products.service');
 function create(req,res){
     product_service_obj.create_product(req.body)
     .then((data)=>{
+        let return_value=data.dataValues
+        return_value.message="Product Created Successfully"
         res.setHeader('content-type','application/json');
         res.writeHead(201);
-        res.end(JSON.stringify({
-            "message":"Product Created Successfully"
-        }))
+        res.end(JSON.stringify(return_value))
     })
     .catch((err)=>{
         res.setHeader('content-type','application/json');
