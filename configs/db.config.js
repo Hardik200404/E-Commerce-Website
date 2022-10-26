@@ -13,3 +13,6 @@ module.exports={
         idle:10000
     }
 }
+
+// //config file for hosted database
+// module.exports = require('../config/config.json');
