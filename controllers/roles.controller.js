@@ -1,4 +1,5 @@
 let {role_serive_obj}=require('../services/role.serive');
+
 function create_role(req,res){
     role_serive_obj.create_role(req.body)
     .then(()=>{

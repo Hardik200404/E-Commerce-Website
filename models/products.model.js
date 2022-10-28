@@ -1,4 +1,5 @@
 const {DataTypes}=require('sequelize');
+
 module.exports=function(seq,sequelize){
     let product_model=seq.define('products',{
         id:{

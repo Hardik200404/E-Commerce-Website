@@ -1,4 +1,5 @@
 const {DataTypes}=require('sequelize');
+
 module.exports=function(seq,sequelize){
     let user_model=seq.define('users',{
         id:{

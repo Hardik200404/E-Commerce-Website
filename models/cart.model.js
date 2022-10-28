@@ -1,4 +1,5 @@
 const {DataTypes}=require('sequelize');
+
 module.exports=function(seq,sequelize){
     let cart_model=seq.define('carts',{
         id:{

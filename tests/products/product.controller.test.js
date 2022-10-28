@@ -42,22 +42,4 @@ describe('Test Product Controller Create call',()=>{
         expect(res.status).toEqual(201);
         expect(res.body).toEqual(JSON.stringify(responseTestPayload));
     });
-
-    // test("should return error message", async () => {
-    //     req = mockRequest();
-    //     res = mockResponse();
-    //     let spy = jest.spyOn(product_model, 'create').mockImplementation(
-    //         (payload) => new Promise(function(resolve, reject) {
-    //             reject('Error Connecting Database');
-    //         })
-    //     );
-
-    //     req.body = requestTestPayload;
-
-    //     await product_controller.create(req, res);
-        
-    //     expect(spy).toHaveBeenCalled();
-    //     expect(res.status).toEqual(500);
-    //     expect(res.body).toEqual(JSON.stringify({message: 'Error Creating Product'}));
-    // });
 })

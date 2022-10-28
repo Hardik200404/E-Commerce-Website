@@ -1,4 +1,5 @@
 const {DataTypes}=require('sequelize');
+
 module.exports=function(seq,sequelize){
     let role_model=seq.define('roles',{
         id:{

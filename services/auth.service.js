@@ -5,7 +5,7 @@ let bcrypt=require('bcrypt');
 
 class auth_service{
     sign_up(user,roles){
-        //before creating user, hash the password
+        //before creating user, hashing password, and replacing it in the user obj
         user.password=bcrypt.hashSync(user.password,8);
         return user_servie_obj.create_user(user)
         .then((user)=>{
@@ -22,45 +22,44 @@ class auth_service{
         }).catch((err)=>{
             //if any serivce call return error
             console.log('error registering user',err)
-            return Promise.reject('error while Signing Up')
+            return Promise.reject('Error while Signing Up')
         })
     }
 
-    sign_in(user_name, password) {
+    sign_in(user_name, password){
         return user_servie_obj.get_user_byName(user_name)
-        .then((user) => {
-            if(user) {
-                let isPasswordValid = bcrypt.compareSync(password, user.password);
-                if(!isPasswordValid) {
+        .then((user)=>{
+            if(user){
+                let isPasswordValid=bcrypt.compareSync(password, user.password);
+                if(!isPasswordValid){
                     return Promise.reject({
-                        errorCode: 401,
-                        message: 'Wrong Password'
+                        errorCode:401,
+                        message:'Wrong Password'
                     });
                 }
 
                 return user.getRoles()
-                .then((roles) => {
+                .then((roles)=>{
                     //getting roles of that user,and adding this information to 
                     //jwt token
-                    let roleNames = roles.map((role) => {
+                    let roleNames=roles.map((role)=>{
                         return role.role_name;
                     });
 
                     let payload={id:user.id, roles:roleNames};
-                    let token = jwt_service_obj.create_jwt_token(payload);
+                    let token=jwt_service_obj.create_jwt_token(payload);
                     
-                    return {
+                    return{
                         message:'Logged In Successfully',
                         accessToken: token
                     }
                 });
 
-            } else {
-                return Promise.reject(
-                    {
-                        errorCode: 404, 
-                        message: 'User Not Found'
-                    });
+            }else{
+                return Promise.reject({
+                    errorCode: 404, 
+                    message: 'User Not Found'
+                });
             }
         })
     }

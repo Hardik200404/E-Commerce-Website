@@ -1,4 +1,5 @@
 const {DataTypes}=require('sequelize');
+
 module.exports=function(seq,sequelize){
     let category_model=seq.define('category',{
         id:{

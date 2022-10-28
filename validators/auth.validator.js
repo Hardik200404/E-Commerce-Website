@@ -93,10 +93,13 @@ function check_roles_withDB(req,res,next){
     }
 }
 
+//SignedIn User will pass jwt token with request
 function verify_jwt(req,res,next){
     try{
         let decoded=jwt_service_obj.verify_jwt_token(req.rawHeaders[1])
+        //decoded jwt token will contain role, which in important for authorization checks
         if(decoded.validated){
+            //adding the decoded jwt to the req object
             req.decoded_jwt = decoded.decoded_jwt;
             next();
         }
@@ -109,6 +112,7 @@ function verify_jwt(req,res,next){
     }
 }
 
+//verfiying if the user has admin privileges
 function is_admin(req,res,next){
     if(req.decoded_jwt.roles.indexOf('admin')!=-1){
         next();

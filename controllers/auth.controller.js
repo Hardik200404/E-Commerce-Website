@@ -1,5 +1,6 @@
 const {auth_service_obj}=require('../services/auth.service');
 
+//controller for sign up
 function sign_up(req,res){
     let user={
         user_name:req.body.user_name,
@@ -25,6 +26,7 @@ function sign_up(req,res){
     })
 }
 
+//controller for sign in
 function sign_in(req,res) {
     auth_service_obj.sign_in(req.body.user_name,req.body.password)
     .then((authResponse) => {

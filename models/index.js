@@ -1,6 +1,7 @@
 const db_config = require('../configs/db.config');
 const Sequelize = require('sequelize');
 
+//defining Database connection credentials 
 let seq=new Sequelize(db_config.NAME,db_config.USER,db_config.PASSWORD,{
     host:db_config.HOST,
     port:3306,

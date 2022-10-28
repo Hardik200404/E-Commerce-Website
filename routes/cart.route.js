@@ -1,6 +1,10 @@
+//importing controllers
+let cart_controller=require('../controllers/cart.controller');
+
+//importing validators
 let {verify_jwt}=require('../validators/auth.validator');
 let {products_ids_validator}=require('../validators/product.validator')
-let cart_controller=require('../controllers/cart.controller');
+
 module.exports=function(app){
     app.post('/cart',verify_jwt,cart_controller.create)
     app.get('/cart/:id',verify_jwt,cart_controller.get_cart)

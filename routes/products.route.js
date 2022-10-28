@@ -1,8 +1,11 @@
+//importing controllers
 let {create,fetchAll,fetchOne,update,delete_product} =require('../controllers/products.controller');
+
+//importing validators
 let {product_validator}=require('../validators/product.validator');
 let {verify_jwt,is_admin}=require('../validators/auth.validator');
-//all the endpoints and methods are mentioned here, 
-//with the corresponding controllers and required validators
+
+//defining endpoints
 module.exports=function(app){
     app.get('/products',fetchAll);
     app.post('/products',[verify_jwt,is_admin,product_validator],create);

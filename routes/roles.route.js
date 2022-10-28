@@ -1,4 +1,7 @@
+//importing controllers
 let roles_controller=require('../controllers/roles.controller');
+
+//importing validators
 let {verify_jwt,is_admin}=require('../validators/auth.validator');
 
 module.exports=function(app){

@@ -10,9 +10,9 @@ so the flow begins with server.js
 it gets the port from server.config which got it from '.env' file
 
 > server.js --> models (index.js)
-it gets the db object which it uses to be in sync with MySql
+it gets the db object which it uses to be in sync with MySql Database
 
-Different Application's '.route' files are registered along with the express 'app'
+Different Application's '.route' files are registered along with the express 'app',
 those '.route' files contain the endpoints
 
 Depending upon the url ,corresponding endpoint is hit
@@ -25,15 +25,22 @@ Depending upon the url and the method the corresponding controller function is c
 > category.route.js --> controllers(category.controller)
 
 These controllers only handle req,res and trigger the corresponding function of category.service
-which interacts with db
+which interacts with Database
 > category.controller --> services(category.service)
-> category.service --> MySql
+> category.service --> MySql Database
 
 Response
-> MySql --> category.service --> category.controller --> User
+> MySql Database --> category.service --> category.controller --> User
 
                         ----------
 
 
+---User Registration(SignUp) and SignIn---
+
+>User passwords are first hashed(encrypted) using 'bcrypt' Lib, then registered
+
+>While Signing In, If the credentials are correct User is provided a 'Jwt token'
+which will validate the authorization of the User,
+As the encoded token will contain roles(privileges) of the User 
 
 

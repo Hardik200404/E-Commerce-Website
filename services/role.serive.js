@@ -1,4 +1,5 @@
 let db=require('../models/index');
+
 class role_serive{
     constructor(){
         this.schema=db.role;
