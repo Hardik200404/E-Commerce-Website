@@ -5,6 +5,7 @@ const {create,fetchAll,fetchOne,update,delete_category} = require("../controller
 const {category_name_validator}=require('../validators/category.validator');
 let {verify_jwt,is_admin}=require('../validators/auth.validator');
 
+//defining endpoints
 module.exports = function(app){
     app.post("/categories",[verify_jwt,is_admin,category_name_validator], create);
     app.get("/categories", fetchAll);
